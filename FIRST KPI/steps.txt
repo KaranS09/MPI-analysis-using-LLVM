@@ -1,0 +1,5 @@
+Compiling: mpicc -o mpi_program testing.cpp
+
+Running: mpirun -np 2 ./mpi_program -analyze-mpi-uniform-participation
+
+

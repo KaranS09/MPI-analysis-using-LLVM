@@ -1,0 +1,9 @@
+compile the pass: clang++ -shared -fPIC -o MPIAnalysisPass.so MPIAnalysisPass.cpp `llvm-config --cxxflags --ldflags --libs`
+
+run the pass: opt -load-pass-plugin=./MPIAnalysisPass.so -passes="mpi-analysis" < input.ll > /dev/null
+
+setup instructions:
+
+->mpicc -show
+->clang -I/path/to/mpi/include -emit-llvm -S mpi_example.c -o input.ll
+
