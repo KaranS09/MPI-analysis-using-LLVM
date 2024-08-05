@@ -6,4 +6,3 @@ setup instructions:
 
 ->mpicc -show
 ->clang -I/path/to/mpi/include -emit-llvm -S mpi_example.c -o input.ll
-
