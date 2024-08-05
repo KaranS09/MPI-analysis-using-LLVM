@@ -33,6 +33,8 @@ This project aims to analyze the uniform participation patterns of MPI processes
    clang -I/usr/include/lam -emit-llvm -S mpi_example.c -o input.ll
    ```
 
+   This command generates the LLVM IR file `input.ll` from the provided MPI C code in `mpi_example.c`.
+
    Note: Use the `find` command to locate the MPI header files if the above command fails.
 
    ```sh
@@ -53,11 +55,19 @@ This project aims to analyze the uniform participation patterns of MPI processes
    clang++ -shared -fPIC -o MPIAnalysisPass.so MPIAnalysisPass.cpp `llvm-config --cxxflags --ldflags --libs`
    ```
 
+   This command compiles the MPIAnalysisPass.cpp file into a shared object file (MPIAnalysisPass.so) that can be loaded as an LLVM pass.
+
 2. **Run the Analysis Pass:**
 
    ```sh
    opt -load-pass-plugin=./MPIAnalysisPass.so -passes="mpi-analysis" < input.ll > /dev/null
    ```
+
+   This command runs the MPI analysis pass on the LLVM IR file `input.ll` and generates the analysis report. The `MPIAnalysisPass.so` shared object file is loaded as a plugin, and the `mpi-analysis` pass is executed on the input LLVM IR.
+
+## Output Example
+
+![alt text](./images/output.png)
 
 ## Prerequisites
 
