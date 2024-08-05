@@ -69,6 +69,58 @@ This project aims to analyze the uniform participation patterns of MPI processes
 
 ![alt text](./images/output.png)
 
+## comm, tag, rank
+
+In MPI (Message Passing Interface), `comm`, `tag`, and `rank` are key concepts used to manage and control the communication between processes in a parallel application. Here's a description of each:
+
+### 1. `comm` (Communicator)
+
+- **Definition**: A communicator in MPI is an object that defines a group of processes that can communicate with each other. It essentially encapsulates the communication context.
+- **Common Communicators**:
+
+  - `MPI_COMM_WORLD`: The default communicator that includes all the processes in the MPI program.
+  - User-defined communicators: You can create custom communicators to group specific processes for more specialized communication.
+
+- **Usage**: Communicators are passed as arguments to most MPI functions to specify the group of processes involved in the communication.
+- **Example**:
+
+  ```c
+  MPI_Comm comm = MPI_COMM_WORLD;
+  MPI_Send(buffer, count, datatype, dest, tag, comm);
+  ```
+
+### 2. `tag`
+
+- **Definition**: A tag is an integer identifier used to distinguish between different messages. It allows processes to filter incoming messages based on their tag value.
+- **Usage**: Tags are used in both sending and receiving messages. The sender assigns a tag to a message, and the receiver can specify which tag to receive.
+- **Example**:
+
+  ```c
+  int tag = 99;
+  MPI_Send(buffer, count, datatype, dest, tag, comm);
+  MPI_Recv(buffer, count, datatype, source, tag, comm, &status);
+  ```
+
+### 3. `rank`
+
+- **Definition**: A rank is a unique identifier assigned to each process within a communicator. It is used to specify the source or destination of a message.
+- **Usage**: The rank of a process is used to identify it among the group of processes in a communicator. Each process can query its own rank using `MPI_Comm_rank`.
+- **Example**:
+
+  ```c
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if (rank == 0) {
+      // Code for process with rank 0
+  } else {
+      // Code for other processes
+  }
+  ```
+
+### Summary in Context
+
+When sending a message from one process to another using MPI, you specify the communicator (`comm`), the rank of the destination process, and a tag to identify the message. For example, the `MPI_Send` function would send data from the calling process to another process identified by its rank within the given communicator, using a specified tag. The receiving process would use `MPI_Recv` with the same communicator and tag to correctly receive and identify the message.
+
 ## Prerequisites
 
 - **LLVM/Clang:** Ensure you have LLVM and Clang installed.
