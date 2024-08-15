@@ -67,7 +67,20 @@ This project aims to analyze the uniform participation patterns of MPI processes
 
 ## Output Example
 
-![alt text](./images/output.png)
+```text
+MPIAnalysisPass running on function: main
+[INFO] Detected MPI MPI_Send: comm=MPI_COMM_WORLD, tag=0, rank=1
+[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=0, rank=32765
+[INFO] Analyzing Uniform Participation Patterns...
+[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 0 involving Ranks: 1 32765
+Uniform Participation Report:
+------------------------------------
+- Communicator: MPI_COMM_WORLD
+- Tag: 0
+- Participating Ranks: {1, 32765}
+This indicates that both MPI_Send and MPI_Recv operations with tag 0 in communicator
+MPI_COMM_WORLD involve these ranks.
+```
 
 ## comm, tag, rank
 
