@@ -3,15 +3,14 @@ source_filename = "mpi_example.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
-%struct.ompi_predefined_communicator_t = type opaque
-%struct.ompi_predefined_datatype_t = type opaque
-%struct.ompi_communicator_t = type opaque
-%struct.ompi_datatype_t = type opaque
-%struct.ompi_status_public_t = type { i32, i32, i32, i32, i64 }
+%struct._comm = type opaque
+%struct._dtype = type opaque
+%struct._status = type { i32, i32, i32, i32 }
 
-@ompi_mpi_comm_world = external global %struct.ompi_predefined_communicator_t, align 1
-@ompi_mpi_int = external global %struct.ompi_predefined_datatype_t, align 1
+@lam_mpi_comm_world = external global %struct._comm, align 1
+@lam_mpi_int = external global %struct._dtype, align 1
 @.str = private unnamed_addr constant [29 x i8] c"Process 1 received data: %d\0A\00", align 1
+@.str.1 = private unnamed_addr constant [29 x i8] c"Process 3 received data: %d\0A\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define dso_local i32 @main(i32 noundef %0, i8** noundef %1) #0 {
@@ -21,50 +20,90 @@ define dso_local i32 @main(i32 noundef %0, i8** noundef %1) #0 {
   %6 = alloca i32, align 4
   %7 = alloca i32, align 4
   %8 = alloca i32, align 4
+  %9 = alloca %struct._comm*, align 8
+  %10 = alloca i32, align 4
+  %11 = alloca i32, align 4
   store i32 0, i32* %3, align 4
   store i32 %0, i32* %4, align 4
   store i8** %1, i8*** %5, align 8
-  %9 = call i32 @MPI_Init(i32* noundef null, i8*** noundef null)
-  %10 = call i32 @MPI_Comm_rank(%struct.ompi_communicator_t* noundef bitcast (%struct.ompi_predefined_communicator_t* @ompi_mpi_comm_world to %struct.ompi_communicator_t*), i32* noundef %6)
-  %11 = load i32, i32* %6, align 4
-  %12 = icmp eq i32 %11, 0
-  br i1 %12, label %13, label %16
-
-13:                                               ; preds = %2
-  store i32 100, i32* %7, align 4
-  %14 = bitcast i32* %7 to i8*
-  %15 = call i32 @MPI_Send(i8* noundef %14, i32 noundef 1, %struct.ompi_datatype_t* noundef bitcast (%struct.ompi_predefined_datatype_t* @ompi_mpi_int to %struct.ompi_datatype_t*), i32 noundef 1, i32 noundef 0, %struct.ompi_communicator_t* noundef bitcast (%struct.ompi_predefined_communicator_t* @ompi_mpi_comm_world to %struct.ompi_communicator_t*))
-  br label %25
+  %12 = call i32 @MPI_Init(i32* noundef null, i8*** noundef null)
+  %13 = call i32 @MPI_Comm_rank(%struct._comm* noundef @lam_mpi_comm_world, i32* noundef %6)
+  %14 = load i32, i32* %6, align 4
+  %15 = icmp eq i32 %14, 0
+  br i1 %15, label %16, label %19
 
 16:                                               ; preds = %2
-  %17 = load i32, i32* %6, align 4
-  %18 = icmp eq i32 %17, 1
-  br i1 %18, label %19, label %24
+  store i32 100, i32* %7, align 4
+  %17 = bitcast i32* %7 to i8*
+  %18 = call i32 @MPI_Send(i8* noundef %17, i32 noundef 1, %struct._dtype* noundef @lam_mpi_int, i32 noundef 1, i32 noundef 0, %struct._comm* noundef @lam_mpi_comm_world)
+  br label %28
 
-19:                                               ; preds = %16
-  %20 = bitcast i32* %8 to i8*
-  %21 = call i32 @MPI_Recv(i8* noundef %20, i32 noundef 1, %struct.ompi_datatype_t* noundef bitcast (%struct.ompi_predefined_datatype_t* @ompi_mpi_int to %struct.ompi_datatype_t*), i32 noundef 0, i32 noundef 0, %struct.ompi_communicator_t* noundef bitcast (%struct.ompi_predefined_communicator_t* @ompi_mpi_comm_world to %struct.ompi_communicator_t*), %struct.ompi_status_public_t* noundef null)
-  %22 = load i32, i32* %8, align 4
-  %23 = call i32 (i8*, ...) @printf(i8* noundef getelementptr inbounds ([29 x i8], [29 x i8]* @.str, i64 0, i64 0), i32 noundef %22)
-  br label %24
+19:                                               ; preds = %2
+  %20 = load i32, i32* %6, align 4
+  %21 = icmp eq i32 %20, 1
+  br i1 %21, label %22, label %27
 
-24:                                               ; preds = %19, %16
-  br label %25
+22:                                               ; preds = %19
+  %23 = bitcast i32* %8 to i8*
+  %24 = call i32 @MPI_Recv(i8* noundef %23, i32 noundef 1, %struct._dtype* noundef @lam_mpi_int, i32 noundef 0, i32 noundef 0, %struct._comm* noundef @lam_mpi_comm_world, %struct._status* noundef null)
+  %25 = load i32, i32* %8, align 4
+  %26 = call i32 (i8*, ...) @printf(i8* noundef getelementptr inbounds ([29 x i8], [29 x i8]* @.str, i64 0, i64 0), i32 noundef %25)
+  br label %27
 
-25:                                               ; preds = %24, %13
-  %26 = call i32 @MPI_Finalize()
+27:                                               ; preds = %22, %19
+  br label %28
+
+28:                                               ; preds = %27, %16
+  %29 = load i32, i32* %6, align 4
+  %30 = srem i32 %29, 2
+  %31 = load i32, i32* %6, align 4
+  %32 = call i32 @MPI_Comm_split(%struct._comm* noundef @lam_mpi_comm_world, i32 noundef %30, i32 noundef %31, %struct._comm** noundef %9)
+  %33 = load i32, i32* %6, align 4
+  %34 = icmp eq i32 %33, 2
+  br i1 %34, label %35, label %39
+
+35:                                               ; preds = %28
+  store i32 200, i32* %10, align 4
+  %36 = bitcast i32* %10 to i8*
+  %37 = load %struct._comm*, %struct._comm** %9, align 8
+  %38 = call i32 @MPI_Send(i8* noundef %36, i32 noundef 1, %struct._dtype* noundef @lam_mpi_int, i32 noundef 3, i32 noundef 1, %struct._comm* noundef %37)
+  br label %49
+
+39:                                               ; preds = %28
+  %40 = load i32, i32* %6, align 4
+  %41 = icmp eq i32 %40, 3
+  br i1 %41, label %42, label %48
+
+42:                                               ; preds = %39
+  %43 = bitcast i32* %11 to i8*
+  %44 = load %struct._comm*, %struct._comm** %9, align 8
+  %45 = call i32 @MPI_Recv(i8* noundef %43, i32 noundef 1, %struct._dtype* noundef @lam_mpi_int, i32 noundef 2, i32 noundef 1, %struct._comm* noundef %44, %struct._status* noundef null)
+  %46 = load i32, i32* %11, align 4
+  %47 = call i32 (i8*, ...) @printf(i8* noundef getelementptr inbounds ([29 x i8], [29 x i8]* @.str.1, i64 0, i64 0), i32 noundef %46)
+  br label %48
+
+48:                                               ; preds = %42, %39
+  br label %49
+
+49:                                               ; preds = %48, %35
+  %50 = call i32 @MPI_Comm_free(%struct._comm** noundef %9)
+  %51 = call i32 @MPI_Finalize()
   ret i32 0
 }
 
 declare i32 @MPI_Init(i32* noundef, i8*** noundef) #1
 
-declare i32 @MPI_Comm_rank(%struct.ompi_communicator_t* noundef, i32* noundef) #1
+declare i32 @MPI_Comm_rank(%struct._comm* noundef, i32* noundef) #1
 
-declare i32 @MPI_Send(i8* noundef, i32 noundef, %struct.ompi_datatype_t* noundef, i32 noundef, i32 noundef, %struct.ompi_communicator_t* noundef) #1
+declare i32 @MPI_Send(i8* noundef, i32 noundef, %struct._dtype* noundef, i32 noundef, i32 noundef, %struct._comm* noundef) #1
 
-declare i32 @MPI_Recv(i8* noundef, i32 noundef, %struct.ompi_datatype_t* noundef, i32 noundef, i32 noundef, %struct.ompi_communicator_t* noundef, %struct.ompi_status_public_t* noundef) #1
+declare i32 @MPI_Recv(i8* noundef, i32 noundef, %struct._dtype* noundef, i32 noundef, i32 noundef, %struct._comm* noundef, %struct._status* noundef) #1
 
 declare i32 @printf(i8* noundef, ...) #1
+
+declare i32 @MPI_Comm_split(%struct._comm* noundef, i32 noundef, i32 noundef, %struct._comm** noundef) #1
+
+declare i32 @MPI_Comm_free(%struct._comm** noundef) #1
 
 declare i32 @MPI_Finalize() #1
 
