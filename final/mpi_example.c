@@ -100,47 +100,47 @@ OUTPUT:
 ✅ Step 2: Compiled MPIAnalysisPass.cpp to shared object (MPIAnalysisPass.so)
 MPIAnalysisPass running on function: main
 [INFO] Detected MPI MPI_Send: comm=MPI_COMM_WORLD, tag=0, rank=1
-[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=0, rank=32765
+[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=0, rank=0
 [INFO] Detected MPI MPI_Send: comm=MPI_COMM_WORLD, tag=1, rank=3
-[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=1, rank=32765
+[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=1, rank=2
 [INFO] Detected MPI MPI_Send: comm=MPI_COMM_WORLD, tag=2, rank=5
-[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=2, rank=32765
+[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=2, rank=4
 [INFO] Detected MPI MPI_Send: comm=MPI_COMM_WORLD, tag=3, rank=7
-[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=3, rank=32765
+[INFO] Detected MPI MPI_Recv: comm=MPI_COMM_WORLD, tag=3, rank=6
 [INFO] Analyzing Uniform Participation Patterns...
-[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 0 involving Ranks: 1 32765
+[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 0 involving Ranks: 0 1
 Uniform Participation Report:
 ------------------------------------
 - Communicator: MPI_COMM_WORLD
 - Tag: 0
-- Participating Ranks: {1, 32765}
+- Participating Ranks: {0, 1}
 This indicates that both MPI_Send and MPI_Recv operations with tag 0 in communicator
 MPI_COMM_WORLD involve these ranks.
 
-[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 1 involving Ranks: 3 32765
+[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 1 involving Ranks: 2 3
 Uniform Participation Report:
 ------------------------------------
 - Communicator: MPI_COMM_WORLD
 - Tag: 1
-- Participating Ranks: {3, 32765}
+- Participating Ranks: {2, 3}
 This indicates that both MPI_Send and MPI_Recv operations with tag 1 in communicator
 MPI_COMM_WORLD involve these ranks.
 
-[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 2 involving Ranks: 5 32765
+[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 2 involving Ranks: 4 5
 Uniform Participation Report:
 ------------------------------------
 - Communicator: MPI_COMM_WORLD
 - Tag: 2
-- Participating Ranks: {5, 32765}
+- Participating Ranks: {4, 5}
 This indicates that both MPI_Send and MPI_Recv operations with tag 2 in communicator
 MPI_COMM_WORLD involve these ranks.
 
-[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 3 involving Ranks: 7 32765
+[INFO] Uniform Participation Detected in Comm MPI_COMM_WORLD with Tag 3 involving Ranks: 6 7
 Uniform Participation Report:
 ------------------------------------
 - Communicator: MPI_COMM_WORLD
 - Tag: 3
-- Participating Ranks: {7, 32765}
+- Participating Ranks: {6, 7}
 This indicates that both MPI_Send and MPI_Recv operations with tag 3 in communicator
 MPI_COMM_WORLD involve these ranks.
 
