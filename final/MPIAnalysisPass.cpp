@@ -63,8 +63,8 @@ namespace
                 mpiComm.tag = tagArg->getSExtValue();
             }
 
-            // Extract rank (3rd argument for Send, 4th for Recv)
-            int rankArgIndex = (funcName.equals("MPI_Send")) ? 3 : 2;
+            // Extract rank (3rd argument for Send, 3rd for Recv)
+            int rankArgIndex = (funcName.equals("MPI_Send")) ? 3 : 3; // Both should use index 3
             if (auto *rankArg = dyn_cast<ConstantInt>(call->getArgOperand(rankArgIndex)))
             {
                 mpiComm.rank = rankArg->getSExtValue();
